@@ -11,6 +11,8 @@ Install [Python3](https://www.python.org/downloads/).
 Get python working on the command line.
 Install [python pandas library](https://pandas.pydata.org/) using pip
 > python -m pip install pandas
+Create a data folder this git repo. (This will be ignored by git)
+> mkdir data
 
 ## Example:
 ```

@@ -6,6 +6,24 @@ iddatarows,datum,tijd,...
 74765536,2023-12-20,23:59:41,102,...
 ```
 
+# How to run
+Install [Python3](https://www.python.org/downloads/).
+Get python working on the command line.
+Install [python pandas library](https://pandas.pydata.org/) using pip
+> python -m pip install pandas
+
+## Example:
+```
+$ python pythonDataFilter.py
+Enter input CSV file path (default: data/input.csv):
+Enter output CSV file path (default: data/output.csv):
+Choose delimiter - Comma (C) or Tab (T) [default: Comma]:
+Choose time interval - Hourly (H) or Minutes (M) [default: Hourly]: M
+Enter the number of minutes for interval: 10
+Choose First (F) or Last (L) entry for each interval [default: First]: L
+Processed data saved to data/output.csv
+```
+
 # Requirements
 Python
 

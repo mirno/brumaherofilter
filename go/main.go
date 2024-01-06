@@ -51,21 +51,27 @@ func getInput(reader *bufio.Reader, prompt, defaultValue string) string {
 }
 
 func processCSV(inputFile, outputFile string, delimiter rune, interval int, firstOrLast string) {
-	file, err := os.Open(inputFile)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
+    file, err := os.Open(inputFile)
+    if err != nil {
+        panic(err)
+    }
+    defer file.Close()
 
-	reader := csv.NewReader(file)
-	reader.Comma = delimiter
+    reader := csv.NewReader(file)
+    reader.Comma = delimiter
 
-	records, err := reader.ReadAll()
-	if err != nil {
-		panic(err)
-	}
+    // Read the header row separately
+    header, err := reader.Read()
+    if err != nil {
+        panic(err)
+    }
 
-	processedRecords := make(map[string][]string)
+    records, err := reader.ReadAll()
+    if err != nil {
+        panic(err)
+    }
+
+    processedRecords := make(map[string][]string)
 	for _, record := range records {
 		if len(record) < 3 {
 			continue // Skip if record does not have enough fields
@@ -85,7 +91,7 @@ func processCSV(inputFile, outputFile string, delimiter rune, interval int, firs
 		}
 	}
 
-	writeCSV(outputFile, processedRecords)
+	writeCSV(outputFile, header, processedRecords)
 }
 
 func roundDownTime(t time.Time, interval int) time.Time {
@@ -95,18 +101,24 @@ func roundDownTime(t time.Time, interval int) time.Time {
 	return t.Truncate(time.Duration(interval) * time.Minute)
 }
 
-func writeCSV(outputFile string, records map[string][]string) {
-	file, err := os.Create(outputFile)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
+func writeCSV(outputFile string, header []string, records map[string][]string) {
+    file, err := os.Create(outputFile)
+    if err != nil {
+        panic(err)
+    }
+    defer file.Close()
 
-	writer := csv.NewWriter(file)
-	for _, record := range records {
-		if err := writer.Write(record); err != nil {
-			panic(err)
-		}
-	}
-	writer.Flush()
+    writer := csv.NewWriter(file)
+    // Write the header row first
+    if err := writer.Write(header); err != nil {
+        panic(err)
+    }
+
+    // Write the rest of the records
+    for _, record := range records {
+        if err := writer.Write(record); err != nil {
+            panic(err)
+        }
+    }
+    writer.Flush()
 }

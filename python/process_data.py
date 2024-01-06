@@ -2,11 +2,9 @@ import pandas as pd
 
 def combine_and_round_down(row, interval):
     full_datetime = pd.to_datetime(f"{row['datum']} {row['tijd']}")
-    # Round down based on the interval
     if interval == 'hourly':
         return full_datetime.replace(minute=0, second=0, microsecond=0)
     else:
-        # Round down to the nearest interval in minutes
         minute = (full_datetime.minute // interval) * interval
         return full_datetime.replace(minute=minute, second=0, microsecond=0)
 
@@ -26,8 +24,8 @@ def process_csv(input_file, output_file, delimiter, interval, first_or_last):
     print(f"Processed data saved to {output_file}")
 
 if __name__ == "__main__":
-    input_file = input("Enter input CSV file path (default: data/input.csv): ") or "data/input.csv"
-    output_file = input("Enter output CSV file path (default: data/output.csv): ") or "data/output.csv"
+    input_file = input("Enter input CSV file path (default: input.csv): ") or "input.csv"
+    output_file = input("Enter output CSV file path (default: output.csv): ") or "output.csv"
     delimiter_choice = input("Choose delimiter - Comma (C) or Tab (T) [default: Comma]: ") or "C"
     delimiter = ',' if delimiter_choice.upper() == 'C' else '\t'
     interval_choice = input("Choose time interval - Hourly (H) or Minutes (M) [default: Hourly]: ") or "H"
